@@ -1,0 +1,46 @@
+INSCRIPTION RELOADED - PyGame to Web Game
+==========================================
+
+IMPORTANT REQUIREMENT:
+DAPAT NASA ISA TALAGA MAIN CLASS ANG BUONG LARO PRA MACONVERT ANG PYGAME SA PYGBAG
+
+INSTALLATION:
+Open CommandPrompt and type:
+	pip install pygbag
+
+USAGE:
+Use cd command to change directory to your pygame folder:
+	cd path\to\your\pygame\folder
+	pygbag your_game.py
+
+After running pygbag, it will provide a local URL (usually http://localhost:8000) 
+to play your game in the browser.
+
+PYGBAG CONVERSION REQUIREMENTS:
+
+Important code changes made for web compatibility:
+
+1. ASYNC MAIN LOOP:
+   - Ginawang async function ang main()
+   - Added `await asyncio.sleep(0)` sa game loop
+   - Gamitin `asyncio.run(main())` instead of regular main()
+
+2. WEB PLATFORM DETECTION:
+   ```python
+   WEB = False
+   if sys.platform in ["wasi", "emscripten"]:
+       WEB = True
+       from platform import window
+
+3.ASSET LOADING na Web compatible:
+	def load_image(name):
+		try:
+			image = pygame.image.load(f"assets/{name}").convert_alpha()
+			return image
+		except Exception as e:
+			# Error handling if di ma-load
+
+4. Gumamit ng localStorage para sa database kaisa sa sqlLite dahil di supported ang sqlLite sa web-Assembly 
+	if WEB:
+		data = window.localStorage.getItem("leaderboard")
+		window.localStorage.setItem("leaderboard", json.dumps(data))
